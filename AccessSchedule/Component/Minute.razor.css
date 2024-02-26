@@ -1,0 +1,32 @@
+﻿body {
+}
+
+.tick {
+	height: 10px;
+	width: 2px;
+	background-color: black;
+}
+
+.small-position {
+	position: relative;
+	bottom: 100%;
+}
+
+.tick.large {
+	height: 20px;
+}
+
+.large-position {
+	position: relative;
+	bottom: 200%;
+}
+
+.number1 {
+	position: relative;
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 0.75rem;
+	white-space: nowrap;
+	user-select: none;
+}
