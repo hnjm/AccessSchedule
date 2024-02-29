@@ -1,0 +1,31 @@
+﻿<MudPaper Outlined="true">
+    <MudButton Variant="Variant.Outlined" Color="Color.Dark" DisableElevation="true" OnClick="@ToggleOpen">Manual Input</MudButton>
+    <MudPopover Open="_isOpen" OverflowBehavior="OverflowBehavior.FlipAlways" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Paper="false">
+        <MudPaper Outlined="true" Class="px-2 py-6">
+                <div class="d-flex align-end justify-space-between ">
+                    <MudTimePicker AmPm="false" Editable="true" @bind-Time="_startTime"  Variant="Variant.Outlined" />
+                    <MudTimePicker AmPm="false" Editable="true" @bind-Time="_endTime" Variant="Variant.Outlined" />
+                    <MudButton Variant="Variant.Outlined" Style="width:60px;">Ok</MudButton>
+                </div>
+        </MudPaper>
+    </MudPopover>
+</MudPaper>
+
+@code {
+
+    private TimeSpan? _startTime = new TimeSpan(00, 45, 00);
+    private TimeSpan? _endTime = new TimeSpan(00, 45, 00);
+    public bool _isOpen = false;
+
+    public void ToggleOpen()
+    {
+        if (_isOpen)
+        {
+            _isOpen = false;
+        }
+        else
+        {
+            _isOpen = true;
+        }
+    }
+}

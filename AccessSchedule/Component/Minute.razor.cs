@@ -8,20 +8,17 @@ namespace AccessSchedule.Component
     {
         private MudTheme Theme = new MudTheme();
         [Parameter]
-        public string Position { get; set; } = string.Empty;
-        [Parameter]
-        public string Idx { get; set; } = string.Empty;
+        public TimeSpan Idx { get; set; }
         [Parameter]
         public int? Number { get; set; } = null;
-
         [Parameter]
         public bool IsSelected { get; set; }
 
         [Parameter]
-        public EventCallback<string> OnMouseDown { get; set; }
+        public EventCallback<TimeSpan> OnMouseDown { get; set; }
 
         [Parameter]
-        public EventCallback<string> OnMouseEnter { get; set; }
+        public EventCallback<TimeSpan> OnMouseEnter { get; set; }
 
         [Parameter]
         public EventCallback OnMouseUp { get; set; }

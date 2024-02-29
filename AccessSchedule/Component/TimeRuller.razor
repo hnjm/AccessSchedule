@@ -6,26 +6,25 @@
                         <MudText>Sun.</MudText>
                     </MudPaper>
                 </MudItem>
-            @for (int i = 0; i <= 24; i++)
+            @for (int i = 0; i < 24; i++)
             {
-
-                <Minute Position="@(TicLargePosition(i))"
-                              Number="@(i)"
-                              Idx="@($"{i}:00")"
-                              OnMouseDown="HandleMouseDown"
-                              OnMouseEnter="HandleMouseEnter"
-                              OnMouseUp="HandleMouseUp"
-                              IsSelected=@ScheduleExist($"{i}:00")></Minute>
+                TimeSpan timeSpan = new TimeSpan(i, 00, 00);
+                <Minute Number="i"
+                        Idx="@timeSpan"
+                        OnMouseDown="HandleMouseDown"
+                        OnMouseEnter="HandleMouseEnter"
+                        OnMouseUp="HandleMouseUp"
+                        IsSelected=@_selections[timeSpan]></Minute>
                 @if (i < 24)
                 {
                     for (int j = 1; j < 4; j++)
                     {
-                        <Minute Position="@(TicPosition(i, j))"
-                                      Idx="@($"{i}:{Minutes(j)}")"
-                                      OnMouseDown="HandleMouseDown"
-                                      OnMouseEnter="HandleMouseEnter"
-                                      OnMouseUp="HandleMouseUp"
-                                      IsSelected=@ScheduleExist($"{i}:{Minutes(j)}")></Minute>
+                        timeSpan = new TimeSpan(i, Minutes(j), 00);
+                        <Minute Idx="@timeSpan"
+                                OnMouseDown="HandleMouseDown"
+                                OnMouseEnter="HandleMouseEnter"
+                                OnMouseUp="HandleMouseUp"
+                                IsSelected=@_selections[timeSpan]></Minute>
                     }
                 }
             }
@@ -44,9 +43,9 @@
                     <MudPopover Open="_isOpen" OverflowBehavior="OverflowBehavior.FlipAlways" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Paper="false">
                         <MudPaper Outlined="true" Class="px-2 py-6">
                             <div class="d-flex align-end justify-space-between ">
-                                <MudTextField @bind-Value="TextValue" Style="height:40px;width:60px;" Variant="Variant.Outlined"></MudTextField>
-                                <MudTextField @bind-Value="TextValue" Style="height:40px;width:60px;" Variant="Variant.Outlined"></MudTextField>
-                                <MudButton Variant="Variant.Outlined" Style="height:40px;width:60px;">Ok</MudButton>
+                                <MudTimePicker AmPm="false" Editable="true" @bind-Time="_startTime" Variant="Variant.Outlined" />
+                                <MudTimePicker AmPm="false" Editable="true" @bind-Time="_endTime" Variant="Variant.Outlined" />
+                                <MudButton Variant="Variant.Outlined" @onclick="AddManually" Style="width:60px;">Ok</MudButton>
                             </div>
                         </MudPaper>
                     </MudPopover>
