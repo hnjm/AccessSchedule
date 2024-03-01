@@ -1,4 +1,24 @@
 ﻿@page "/"
 
+<MudContainer >
 
-<TimeRuller ></TimeRuller>
+    <MudPaper Class="d-flex justify-end flex-grow-1 gap-4" Elevation="0">
+            <MudButton Variant="Variant.Filled" OnClick="(e) => _switchTimeFormat = !_switchTimeFormat" Color="Color.Primary">@(_switchTimeFormat ? "24hr" : "AM/PM")</MudButton>
+    <MudPaper >
+            <MudRadioGroup @bind-Value="_isAddOrRemove" >
+                <MudRadio Value="true" Color="Color.Primary" >Add</MudRadio>
+                <MudRadio Value="false" Color="Color.Secondary" >Remove</MudRadio>
+            </MudRadioGroup>
+    </MudPaper>
+    </MudPaper>
+</MudContainer>
+<MudPaper Elevation="4" Class="pa-16 ma-4">
+
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Sun"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Mon"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Tue"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Wed"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Thu"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Fri"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Sat"></TimeRuller>
+</MudPaper>

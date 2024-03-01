@@ -1,14 +1,14 @@
-﻿<MudPaper Elevation="4" Class="pa-16 ma-4">
+﻿<MudPaper Elevation="0" Class="pa-4 ma-4">
     <MudContainer>
         <MudGrid Spacing="0" Justify="Justify.FlexStart" xs="12" Style=" margin:10px; padding:10px;">
                 <MudItem Class="mr-8">
                     <MudPaper xs="4" Elevation="0" >
-                        <MudText>Sun.</MudText>
+                        <MudText>@DayName.</MudText>
                     </MudPaper>
                 </MudItem>
-            @for (int i = 0; i < 24; i++)
+            @for (int i = 0; i <= 24; i++)
             {
-                TimeSpan timeSpan = new TimeSpan(i, 00, 00);
+            TimeSpan timeSpan = new TimeSpan((i == 24 ? 23 : i), (i == 24 ? 59 : 00), 00);
                 <Minute Number="i"
                         Idx="@timeSpan"
                         OnMouseDown="HandleMouseDown"
@@ -30,10 +30,7 @@
             }
             </MudGrid>
         <MudGrid Class="align-end">
-            <MudItem>
-                <MudButton Variant="Variant.Filled" OnClick="(e) => _switchTimeFormat = !_switchTimeFormat" Color="Color.Primary">@(_switchTimeFormat ? "AM/PM" : "24hr")</MudButton>
-
-            </MudItem>
+           
             <MudItem xs="8">
                 <div>@DateTimeStr</div>
             </MudItem>

@@ -1,14 +1,19 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Data;
 
 namespace AccessSchedule.Component
 {
     public partial class TimeRuller
     {
+        [Parameter]
+        public bool IsAddOrRemove { get; set; }
+        [Parameter]
+        public bool SwitchTimeFormat { get; set; }
+        [Parameter]
+        public string DayName { get; set; }
 
-        private bool _switchTimeFormat = false;
-
-        private string _timeFormat => _switchTimeFormat ? "hh:mm tt" : "HH:mm";
+        private string _timeFormat => SwitchTimeFormat ? "hh:mm tt" : "HH:mm";
         public string weekSchedule = "Week Schedule";
 
         private int Minutes(int j) => (j) switch
@@ -33,26 +38,20 @@ namespace AccessSchedule.Component
 
         protected override void OnInitialized()
         {
-            _selections =new Dictionary<TimeSpan, bool>();
-            for (int i = 0; i < 24; i++)
-            {
-
-                _selections[new TimeSpan(i,00, 00)] = ScheduleExist(new TimeSpan(i, 00, 00)) ? true : false ;
-                if (i < 24)
-                {
-
-                    for (int j = 1; j < 4; j++)
-                    {
-                        _selections[new TimeSpan(i, Minutes(j), 00)] = ScheduleExist(new TimeSpan(i, Minutes(j), 00)) ? true : false; ;
-                    }
-                }
-            }
+            GetSelection();
             CheckSelection();
         }
 
         private void HandleMouseDown(TimeSpan idx)
         {
-            _selections[idx] = !_selections[idx];
+            if (IsAddOrRemove)
+            {
+                _selections[idx] = true;
+            }
+            else
+            {
+                _selections[idx] = false;
+            }
             _isBeingSelected = true;
             CheckSelection();
         }
@@ -61,7 +60,14 @@ namespace AccessSchedule.Component
         {
             if (_isBeingSelected)
             {
-                _selections[idx] = !_selections[idx];
+                if (IsAddOrRemove)
+                {
+                    _selections[idx] = true;
+                }
+                else
+                {
+                    _selections[idx] = false;
+                }
             }
             CheckSelection();
 
@@ -107,7 +113,12 @@ namespace AccessSchedule.Component
             }
         }
 
-        private bool ScheduleExist(TimeSpan timeStr)
+        private bool SheduleExist(TimeSpan start, TimeSpan end)
+        {
+            return accessScheduleDto.ScheduleEntries.Any(x => start == x.StartTime && end == x.EndTime);
+        }
+
+        private bool ScheduleExistInBetween(TimeSpan timeStr)
         {
             bool flag = false;
             flag = accessScheduleDto.ScheduleEntries.Any(x => timeStr >= x.StartTime && timeStr <= x.EndTime);
@@ -136,9 +147,31 @@ namespace AccessSchedule.Component
         }
         private void AddManually()
         {
-            
-            accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
-            CheckSelection();
+            bool check = SheduleExist((TimeSpan)_startTime, (TimeSpan)_endTime);
+            if (!check)
+            {
+                accessScheduleDto.ScheduleEntries.Add(new() { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
+                ToggleOpen();
+            }
+            GetSelection();
+        }
+
+        private void GetSelection()
+        {
+            _selections = new Dictionary<TimeSpan, bool>();
+            for (int i = 0; i <= 24; i++)
+            {
+
+                _selections[new TimeSpan((i == 24 ? 23 : i), (i == 24 ? 59 : 00), 00)] = ScheduleExistInBetween(new TimeSpan((i == 24 ? 23 : i), (i == 24 ? 59 : 00), 00)) ? true : false;
+                if (i < 24)
+                {
+
+                    for (int j = 1; j < 4; j++)
+                    {
+                        _selections[new TimeSpan(i, Minutes(j), 00)] = ScheduleExistInBetween(new TimeSpan(i, Minutes(j), 00)) ? true : false; ;
+                    }
+                }
+            }
         }
     }
 }
