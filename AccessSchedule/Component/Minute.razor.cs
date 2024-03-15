@@ -22,6 +22,11 @@ namespace AccessSchedule.Component
 
         [Parameter]
         public EventCallback OnMouseUp { get; set; }
+        [Parameter]
+        public bool SwitchTimeFormat { get; set; }
+        private string _timeFormat => SwitchTimeFormat ? "hh tt" : "HH";
+
+        public Func<TimeSpan, string, string> To24OrAmPm = (j, format) => new DateTime().Add(j).ToString(format);
 
         private string GetClass()
         {
@@ -38,7 +43,7 @@ namespace AccessSchedule.Component
 
         private async Task HandleMouseDown(MouseEventArgs e)
         {
-            if (e.CtrlKey && e.Button == 0)
+            if (e.Button == 0)
             {
                 await OnMouseDown.InvokeAsync(Idx);
             }
@@ -46,7 +51,7 @@ namespace AccessSchedule.Component
 
         private async Task HandleMouseEnter(MouseEventArgs e)
         {
-            if (e.CtrlKey && e.Button == 0)
+            if (e.Button == 0)
             {
                 await OnMouseEnter.InvokeAsync(Idx);
             }

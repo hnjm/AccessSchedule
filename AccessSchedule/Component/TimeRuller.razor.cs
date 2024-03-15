@@ -6,13 +6,15 @@ namespace AccessSchedule.Component
 {
     public partial class TimeRuller
     {
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
         [Parameter]
         public bool IsAddOrRemove { get; set; }
         [Parameter]
         public bool SwitchTimeFormat { get; set; }
         [Parameter]
         public string DayName { get; set; }
-
+        public DateTime? _date { get; set; }
         private string _timeFormat => SwitchTimeFormat ? "hh:mm tt" : "HH:mm";
         public string weekSchedule = "Week Schedule";
 
@@ -38,6 +40,7 @@ namespace AccessSchedule.Component
 
         protected override void OnInitialized()
         {
+            _date = accessScheduleDto.Date;
             GetSelection();
             CheckSelection();
         }
@@ -83,6 +86,8 @@ namespace AccessSchedule.Component
             TimeSpan tempFirst = new();
             TimeSpan tempSecond = new();
             accessScheduleDto = new();
+            accessScheduleDto.Date = _date;
+
             if (_selections.All(x => x.Value == true))
             {
                     accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = _selections.First().Key, EndTime = _selections.Last().Key });
@@ -103,7 +108,6 @@ namespace AccessSchedule.Component
                 if (i.Value is false && flag is false)
                 {
                         accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
-
                     flag = true;
                 }
             }
@@ -111,6 +115,7 @@ namespace AccessSchedule.Component
             {
                 accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
             }
+
         }
 
         private bool SheduleExist(TimeSpan start, TimeSpan end)
@@ -145,15 +150,26 @@ namespace AccessSchedule.Component
                 _isOpen = true;
             }
         }
+       
         private void AddManually()
         {
-            bool check = SheduleExist((TimeSpan)_startTime, (TimeSpan)_endTime);
-            if (!check)
+            if (_startTime < _endTime)
             {
-                accessScheduleDto.ScheduleEntries.Add(new() { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
-                ToggleOpen();
+                bool check = SheduleExist((TimeSpan)_startTime, (TimeSpan)_endTime);
+
+                if (!check)
+                {
+                    accessScheduleDto.ScheduleEntries.Add(new() { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
+                    ToggleOpen();
+                }
+                GetSelection();
             }
-            GetSelection();
+            else
+            {
+                Snackbar.Clear();
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
+                Snackbar.Add("Start Time must be less than end time", Severity.Error);
+            }
         }
 
         private void GetSelection()
@@ -172,6 +188,7 @@ namespace AccessSchedule.Component
                     }
                 }
             }
+            StateHasChanged();
         }
     }
 }

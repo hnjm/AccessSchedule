@@ -1,4 +1,5 @@
 ﻿<MudPaper Elevation="0" Class="pa-4 ma-4">
+    
     <MudContainer>
         <MudGrid Spacing="0" Justify="Justify.FlexStart" xs="12" Style=" margin:10px; padding:10px;">
                 <MudItem Class="mr-8">
@@ -9,7 +10,8 @@
             @for (int i = 0; i <= 24; i++)
             {
             TimeSpan timeSpan = new TimeSpan((i == 24 ? 23 : i), (i == 24 ? 59 : 00), 00);
-                <Minute Number="i"
+                <Minute 
+                        Number="i"
                         Idx="@timeSpan"
                         OnMouseDown="HandleMouseDown"
                         OnMouseEnter="HandleMouseEnter"
@@ -30,24 +32,30 @@
             }
             </MudGrid>
         <MudGrid Class="align-end">
-           
-            <MudItem xs="8">
+            <MudItem>
+                <MudPaper Elevation="0" >
+                    <input type="date"  @bind="_date" />
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="7">
                 <div>@DateTimeStr</div>
             </MudItem>
+          
             <MudItem>
                 <MudPaper Outlined="true">
                     <MudButton Variant="Variant.Outlined" Color="Color.Dark" DisableElevation="true" OnClick="@ToggleOpen">Manual Input</MudButton>
                     <MudPopover Open="_isOpen" OverflowBehavior="OverflowBehavior.FlipAlways" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Paper="false">
                         <MudPaper Outlined="true" Class="px-2 py-6">
                             <div class="d-flex align-end justify-space-between ">
-                                <MudTimePicker AmPm="false" Editable="true" @bind-Time="_startTime" Variant="Variant.Outlined" />
-                                <MudTimePicker AmPm="false" Editable="true" @bind-Time="_endTime" Variant="Variant.Outlined" />
-                                <MudButton Variant="Variant.Outlined" @onclick="AddManually" Style="width:60px;">Ok</MudButton>
+                                <MudTimePicker Label="Start Time" AmPm="@SwitchTimeFormat" Editable="true" @bind-Time="_startTime" Variant="Variant.Outlined" />
+                                <MudTimePicker Label="End Time" AmPm="@SwitchTimeFormat" Editable="true" @bind-Time="_endTime" Variant="Variant.Outlined" />
+                                <MudButton Variant="Variant.Outlined" @onclick="AddManually" Style="width:60px;"  >Ok</MudButton>
                             </div>
                         </MudPaper>
                     </MudPopover>
                 </MudPaper>
             </MudItem>
+           
             </MudGrid>
     </MudContainer>
 </MudPaper>

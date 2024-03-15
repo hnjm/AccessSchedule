@@ -9,17 +9,8 @@
     public class AccessScheduleDto
     {
         public string? AccessScheduleTitle { get; set; }
+        public string? DayName { get; set; }
+        public DateTime? Date { get; set; }
         public ICollection<AccessScheduleEntryDto> ScheduleEntries { get; set; } = [];
-    }
-    public enum WeedDays
-    {
-        Sun,
-        Mon,
-        Tue,
-        Wed,
-        Thu,
-        Fri,
-        Sat
-
     }
 }
