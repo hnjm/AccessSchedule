@@ -10,9 +10,11 @@ Our Blazor Scheduler Component offers a range of functionalities tailored for cr
 - **Time Format Toggle:** Choose your preferred time format with a simple toggle between 24-hour and 12-hour formats, catering to your comfort and convenience.
 
 ## Getting Started
+Clone the Repository
 
 ### Prerequisites
 Before you begin, ensure you have the version of [.NET](https://dotnet.microsoft.com/download) .Net 8.0 SDK installed on your machine.
 
+**here is the demo**
 [![here is the demo](https://img.youtube.com/vi/uijlSC1fC98/0.jpg)](https://www.youtube.com/watch?v=uijlSC1fC98)
 
