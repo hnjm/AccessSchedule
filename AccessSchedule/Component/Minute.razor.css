@@ -5,6 +5,8 @@
 	height: 10px;
 	width: 2px;
 	background-color: black;
+	position:absolute;
+	left:5px;
 }
 
 .small-position {
