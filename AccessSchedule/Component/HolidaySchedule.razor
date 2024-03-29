@@ -1,0 +1,41 @@
+﻿<MudPaper Elevation="0" Class="pa-4 ma-4" Style="user-select: none; cursor:auto;">
+    
+    <MudContainer>
+        <MudGrid Spacing="0" >
+            <MudItem Class="mr-10">
+                <MudPaper xs="6" Elevation="0" hidden></MudPaper>
+            </MudItem>
+            @for (int i = 0; i <= 24; i++)
+            {
+                TimeSpan timeSpan = new TimeSpan((i == 24 ? 23 : i), (i == 24 ? 59 : 00), 00);
+                <Minute Number="i"
+                        Idx="@timeSpan"
+                        OnMouseDown="HandleMouseDown"
+                        OnMouseEnter="HandleMouseEnter"
+                        OnMouseUp="HandleMouseUp"
+                        IsSelected=@_selections[timeSpan]
+                        SwitchTimeFormat="SwitchTimeFormat"></Minute>
+                @if (i < 24)
+                {
+                    for (int j = 1; j < 4; j++)
+                    {
+                        timeSpan = new TimeSpan(i, Minutes(j), 00);
+                        <Minute Idx="@timeSpan"
+                                OnMouseDown="HandleMouseDown"
+                                OnMouseEnter="HandleMouseEnter"
+                                OnMouseUp="HandleMouseUp"
+                                IsSelected=@_selections[timeSpan]
+                                SwitchTimeFormat="SwitchTimeFormat"></Minute>
+                    }
+                }
+            }
+        </MudGrid>
+        <MudGrid Class="align-end">
+            
+            <MudItem xs="7">
+                <div>@DateTimeStr</div>
+            </MudItem>
+
+        </MudGrid>
+    </MudContainer>
+</MudPaper>

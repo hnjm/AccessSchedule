@@ -12,7 +12,108 @@
     </MudPaper>
     </MudPaper>
 </MudContainer>
-<MudPaper Elevation="4" Class="pa-16 ma-4">
+<MudPaper Elevation="4" Class="d-flex flex-column justify-center pt-16">
+ <MudPaper Elevation="0" Class="py-4 d-flex ">
 
-<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Sun"></TimeRuller>
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Sun" AccessScheduleDto="@(AccessSchedules.FirstOrDefault(x => x.DayName == "Sun"))"></TimeRuller>
 </MudPaper>
+<MudPaper Elevation="0" Class="d-flex ">
+
+        <TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Mon" AccessScheduleDto="@(AccessSchedules.FirstOrDefault(x => x.DayName == "Mon"))"></TimeRuller>
+</MudPaper>
+<MudPaper Elevation="0" Class="d-flex ">
+
+        <TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Tue" AccessScheduleDto="@(AccessSchedules.FirstOrDefault(x => x.DayName == "Tue"))"></TimeRuller>
+</MudPaper>
+<MudPaper Elevation="0" Class="d-flex ">
+
+        <TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Wed" AccessScheduleDto="@(AccessSchedules.FirstOrDefault(x => x.DayName == "Wed"))"></TimeRuller>
+</MudPaper>
+<MudPaper Elevation="0" Class="d-flex">
+
+        <TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Thu" AccessScheduleDto="@(AccessSchedules.FirstOrDefault(x => x.DayName == "Thu"))"></TimeRuller>
+</MudPaper>
+<MudPaper Elevation="0" Class=" d-flex">
+
+        <TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Fri" AccessScheduleDto="@(AccessSchedules.FirstOrDefault(x => x.DayName == "Fri"))"></TimeRuller>
+</MudPaper>
+<MudPaper Elevation="0" Class=" d-flex ">
+
+<TimeRuller IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Sat"></TimeRuller>
+</MudPaper>
+    <MudPaper Elevation="0" Class="d-flex flex-column flex-grow-1 gap-4">
+        <MudPaper Elevation="0" Class="d-flex justify-center flex-grow-1 gap-4 ml-6 pl-16">
+            <MudPaper Elevation="0" Style="margin-right:280px">           
+                <MudGrid>
+                <MudItem  >
+                    <MudPaper>
+                    <MudDatePicker PickerVariant="PickerVariant.Dialog" T="DateTime" Label="Date" @bind-date="dateValue" />
+                    </MudPaper>
+                </MudItem>
+                <MudItem >
+                    <MudPaper>
+                        <MudButton Variant="Variant.Filled" OnClick="@IncrementDate" Color="Color.Primary">+</MudButton>
+        </MudPaper>
+                </MudItem>
+                <MudItem >
+                    <MudPaper>
+                        <MudButton Variant="Variant.Filled" OnClick="@DecrementDate" Color="Color.Primary">-</MudButton>
+    </MudPaper>
+                </MudItem>
+                <MudItem >
+                    <MudItem xs="12">
+                        <MudPaper Elevation="1" Width="150px">
+                        <div style="height: 100px; overflow-y: auto;">
+                                <Virtualize ItemsProvider="LoadItems" Context="item" OverscanCount="10" @ref="virtualizeComponent">
+                                <div @onclick="() => SelectItem(item)" style="@GetItemStyle(item)">
+                                    @item
+                                </div>
+                            </Virtualize>
+                        </div>
+                        </MudPaper>
+                    </MudItem>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        </MudPaper>
+
+            <MudPaper Elevation="0">
+      
+<HolidaySchedule IsAddOrRemove="@_isAddOrRemove" SwitchTimeFormat="@_switchTimeFormat" DayName="Sat"></HolidaySchedule>
+        </MudPaper>
+</MudPaper>
+</MudPaper>
+
+   
+
+
+
+
+
+
+@code {
+    private List<string> items = new List<string>(); 
+    protected override void OnInitialized()
+    {
+        // Initialize your items list here
+        items = Enumerable.Range(1, 1000).Select(i => $"Item {i}").ToList();
+    }
+    // private async ValueTask<ItemsProviderResult<string>> LoadItems(ItemsProviderRequest request)
+    // {
+    //     // Fetch and return a subset of items based on the request
+    //     var subset = items.Skip(request.StartIndex).Take(request.Count).ToList();
+    //     return new ItemsProviderResult<string>(subset, items.Count);
+    // }
+
+    private void SelectItem(string item)
+    {
+        selectedItem = item;
+        // Additional logic can be added here if needed
+        StateHasChanged(); // This call may be optional depending on how you implement the component
+    }
+
+    private string GetItemStyle(string item)
+    {
+        return item == selectedItem ? "background-color: lightgray;" : "";
+    }
+}

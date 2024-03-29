@@ -6,12 +6,17 @@
 	width: 2px;
 	background-color: black;
 	position:absolute;
-	left:5px;
+}
+.tickline {
+	height: 1px;
+	background-color: black;
+	position: relative;
+	bottom: 300%;
 }
 
 .small-position {
 	position: relative;
-	bottom: 100%;
+	bottom: 80%;
 }
 
 .tick.large {
@@ -20,15 +25,58 @@
 
 .large-position {
 	position: relative;
-	bottom: 200%;
+	bottom: 140%;
+}
+
+.edge-tick-position {
+	height:40px;
+	position: relative;
+	bottom:141%;
 }
 
 .number1 {
 	position: relative;
 	bottom: 100%;
-	left: 50%;
+	right: 4px;
 	transform: translateX(-50%);
 	font-size: 0.75rem;
 	white-space: nowrap;
 	user-select: none;
 }
+.ampm {
+	position: relative;
+	bottom: 560%;
+	right: 4px;
+	transform: translateX(-50%);
+	font-size: 0.75rem;
+	white-space: nowrap;
+	user-select: none;
+}
+.number2 {
+	position: relative;
+	bottom: 50%;
+	right: 4px;
+	transform: translateX(-50%);
+	font-size: 0.75rem;
+	white-space: nowrap;
+	user-select: none;
+}
+.tick24-l{
+	left:2px;
+	width:2.5px;
+}
+.m-l-2{
+	margin-left: 2px;
+	width: 1px;
+}
+.edge-r-8{
+	right: 2px;
+}
+.edge-r-4{
+	right: 5px;
+}
+
+	.mp-1048 {
+		padding: 500px; /* Custom padding for elements with the .taptap class */
+		margin: 500px; /* Custom margin for elements with the .taptap class */
+	}

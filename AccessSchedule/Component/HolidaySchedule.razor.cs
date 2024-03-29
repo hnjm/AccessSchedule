@@ -4,7 +4,7 @@ using System.Data;
 
 namespace AccessSchedule.Component
 {
-    public partial class TimeRuller
+    public partial class HolidaySchedule
     {
         [Inject]
         public ISnackbar Snackbar { get; set; }
@@ -26,21 +26,21 @@ namespace AccessSchedule.Component
             3 => 45,
             _ => 00,
         };
-        private string DateTimeStr => string.Join(", ", AccessScheduleDto.ScheduleEntries.Select(x => $"{(new DateTime().Add(x.StartTime).ToString(_timeFormat))} -  {(x.EndTime != new TimeSpan(00,00,00) ? (new DateTime().Add(x.EndTime).ToString(_timeFormat)) : SwitchTimeFormat ?  "12:00 Am": "24:00")}"));
+        private string DateTimeStr => string.Join(", ", accessScheduleDto.ScheduleEntries.Select(x => $"{(new DateTime().Add(x.StartTime).ToString(_timeFormat))} -  {(x.EndTime != new TimeSpan(00, 00, 00) ? (new DateTime().Add(x.EndTime).ToString(_timeFormat)) : SwitchTimeFormat ? "12:00 Am" : "24:00")}"));
         private List<(string, string)> dateTimePair = new();
         [Parameter]
-        public AccessScheduleDto AccessScheduleDto { get; set; } = new();
+        public AccessScheduleDto accessScheduleDto { get; set; } = new();
         public string TextValue { get; set; } = "";
 
-       
-       
+
+
         private Dictionary<TimeSpan, bool> _selections = null!;
 
         private bool _isBeingSelected;
 
         protected override void OnInitialized()
         {
-            _date = AccessScheduleDto.Date;
+            _date = accessScheduleDto.Date;
             GetSelection();
             CheckSelection();
         }
@@ -85,12 +85,12 @@ namespace AccessSchedule.Component
             bool flag = true;
             TimeSpan tempFirst = new();
             TimeSpan tempSecond = new();
-            AccessScheduleDto.ScheduleEntries = [];
-            AccessScheduleDto.Date = _date;
+            accessScheduleDto = new();
+            accessScheduleDto.Date = _date;
 
             if (_selections.All(x => x.Value == true))
             {
-                    AccessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = _selections.First().Key, EndTime = _selections.Last().Key });
+                accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = _selections.First().Key, EndTime = _selections.Last().Key });
 
                 return;
             }
@@ -107,27 +107,27 @@ namespace AccessSchedule.Component
                 }
                 if (i.Value is false && flag is false)
                 {
-                        AccessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
+                    accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
                     flag = true;
                 }
             }
             if (_selections.Last().Value)
             {
                 tempSecond = new TimeSpan(00, 00, 00);
-                AccessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
+                accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
             }
 
         }
 
         private bool SheduleExist(TimeSpan start, TimeSpan end)
         {
-            return AccessScheduleDto.ScheduleEntries.Any(x => start == x.StartTime && end == x.EndTime);
+            return accessScheduleDto.ScheduleEntries.Any(x => start == x.StartTime && end == x.EndTime);
         }
 
         private bool ScheduleExistInBetween(TimeSpan timeStr)
         {
             bool flag = false;
-            flag = AccessScheduleDto.ScheduleEntries.Any(x => timeStr >= x.StartTime && timeStr <= x.EndTime);
+            flag = accessScheduleDto.ScheduleEntries.Any(x => timeStr >= x.StartTime && timeStr <= x.EndTime);
             if (flag)
             {
                 _selections[timeStr] = true;
@@ -151,7 +151,7 @@ namespace AccessSchedule.Component
                 _isOpen = true;
             }
         }
-       
+
         private void AddManually()
         {
             if (_startTime < _endTime)
@@ -160,7 +160,7 @@ namespace AccessSchedule.Component
 
                 if (!check)
                 {
-                    AccessScheduleDto.ScheduleEntries.Add(new() { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
+                    accessScheduleDto.ScheduleEntries.Add(new() { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
                     ToggleOpen();
                 }
                 GetSelection();

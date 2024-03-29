@@ -1,12 +1,24 @@
-﻿<MudItem Class="mb-md-10 mb-sm-10 ">
-    <MudPaper Tag="Idx" Square Style="@GetStyle()" Height="14px" @onmousedown="HandleMouseDown"
+﻿<MudItem Class="mp-1048">
+    <MudPaper Tag="Idx" Square Style="@GetStyle()"  Height="20px" @onmousedown="HandleMouseDown"
               @onmouseenter="HandleMouseEnter"
               @onmouseup="HandleMouseUp">
+              
+        @if (SwitchTimeFormat)
+        {
+            <div class="@GetClassLine()"></div>
+        }
         <div class="@GetClass()">
-            @if(Number is not null)
+
+        @if(Number is not null)
             {
-                <span class="number1" >@To24OrAmPm(new TimeSpan((int)Number, 00, 00), _timeFormat)</span>
+                <span class="@GetNumberClass()">@GetNumber</span>
             }
         </div>
+        @if (SwitchTimeFormat)
+        {
+            <div class="ampm">@GetAmPm()</div>
+
+        }
+
     </MudPaper>
 </MudItem>
