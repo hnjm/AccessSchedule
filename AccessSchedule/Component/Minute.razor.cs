@@ -28,6 +28,8 @@ namespace AccessSchedule.Component
         [Inject]
         private IBreakpointService BreakpointService { get; set; }
 
+
+        private string noSelect = "no-select";
         private int? GetNumber => SwitchTimeFormat == false ? Number : Number > 12 ? (Number - 12) : Number;
         private string GetAmPm()
         {
@@ -69,7 +71,7 @@ namespace AccessSchedule.Component
             {
 
             }
-            return $"cursor:auto; {selected}{border}";
+            return $"{selected}{border}";
         }
 
         private async Task HandleMouseDown(MouseEventArgs e)
@@ -84,13 +86,14 @@ namespace AccessSchedule.Component
         {
             if (e.Button == 0)
             {
-                await OnMouseEnter.InvokeAsync(Idx);
+                _ = OnMouseEnter.InvokeAsync(Idx);
             }
         }
+    
 
         private async Task HandleMouseUp()
         {
-            await OnMouseUp.InvokeAsync();
+            _ = OnMouseUp.InvokeAsync();
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿.holiday-schedule {
+	border: 1px solid #dcdcdc; 
+	padding: 8px 16px; 
+	margin: 16px; 
+	background-color: #f5f5f5; 
+	text-align: center; 
+}
+
+.holiday-schedule-text {
+	/* Additional text styling if needed */
+}

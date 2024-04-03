@@ -75,8 +75,9 @@
 .edge-r-4{
 	right: 5px;
 }
-
-	.mp-1048 {
-		padding: 500px; /* Custom padding for elements with the .taptap class */
-		margin: 500px; /* Custom margin for elements with the .taptap class */
-	}
+.no-select { 
+    user-select: none; 
+    -webkit-user-select: none; 
+    -moz-user-select: none;
+    -ms-user-select: none; 
+}

@@ -28,6 +28,7 @@ namespace AccessSchedule
                 new AccessScheduleDto("Thu"),
                 new AccessScheduleDto("Fri"),
                 new AccessScheduleDto("Sat"),
+                new AccessScheduleDto("Holiday"),
             };
         }
     }

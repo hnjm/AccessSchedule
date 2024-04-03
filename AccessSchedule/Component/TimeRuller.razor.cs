@@ -75,7 +75,6 @@ namespace AccessSchedule.Component
             CheckSelection();
 
         }
-
         private void HandleMouseUp()
         {
             _isBeingSelected = false;

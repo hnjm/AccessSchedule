@@ -1,22 +1,71 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 using MudBlazor;
+using MudBlazor.Extensions;
 using System.Data;
 
 namespace AccessSchedule.Component
 {
     public partial class HolidaySchedule
     {
-        [Inject]
-        public ISnackbar Snackbar { get; set; }
+        private string selectedItem = string.Empty;
+        private DateTime? dateValue;
+        private IEnumerable<DateTime?> dates;
+        public List<DateTime?> HolidayDate { get; set; }
+        [Parameter]
+        public List<AccessScheduleDto> AccessSchedules { get; set; } 
+        private void RowClicked(string date)
+        {
+            selectedItem = date;
+            _accessScheduleDto = AccessSchedules.FirstOrDefault(x => "Holiday".Equals(x.DayName) && x.Date.ToIsoDateString() == selectedItem);
+            GetSelection();
+
+        }
+
+        private async void DecrementDate()
+        {
+            if(dates.Count() == 1)
+            {
+                AccessSchedules.FirstOrDefault(x => x.DayName == "Holiday").Date = null;
+            }
+            if (selectedItem != null)
+            {
+                AccessSchedules.Remove(AccessSchedules.FirstOrDefault(x => x.Date.ToIsoDateString() == selectedItem && x.DayName == "Holiday"));
+            }
+
+        }
+        private void IncrementDate()
+        {
+            if (dateValue == null || AccessSchedules.FirstOrDefault(x => "Holiday".Equals(x.DayName) && x.Date == dateValue) != null)
+            {
+                return;
+            }
+            try
+            {
+                if (dates.Count() == 0)
+                {
+                    selectedItem = dateValue.ToIsoDateString();
+                    _ = AccessSchedules.FirstOrDefault(x => "Holiday".Equals(x.DayName)).Date = dateValue;
+                }
+                else if (dates.Count() >= 1)
+                {
+                    AccessSchedules.Add(new AccessScheduleDto { Date = dateValue, DayName = "Holiday" });
+                }
+
+                dates = AccessSchedules.Where(x => "Holiday".Equals(x.DayName) && x.Date != null).Select(x => x.Date);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
         [Parameter]
         public bool IsAddOrRemove { get; set; }
         [Parameter]
         public bool SwitchTimeFormat { get; set; }
-        [Parameter]
-        public string DayName { get; set; }
-        public DateTime? _date { get; set; }
         private string _timeFormat => SwitchTimeFormat ? "hh:mm tt" : "HH:mm";
-        public string weekSchedule = "Week Schedule";
 
         private int Minutes(int j) => (j) switch
         {
@@ -26,13 +75,9 @@ namespace AccessSchedule.Component
             3 => 45,
             _ => 00,
         };
-        private string DateTimeStr => string.Join(", ", accessScheduleDto.ScheduleEntries.Select(x => $"{(new DateTime().Add(x.StartTime).ToString(_timeFormat))} -  {(x.EndTime != new TimeSpan(00, 00, 00) ? (new DateTime().Add(x.EndTime).ToString(_timeFormat)) : SwitchTimeFormat ? "12:00 Am" : "24:00")}"));
-        private List<(string, string)> dateTimePair = new();
-        [Parameter]
-        public AccessScheduleDto accessScheduleDto { get; set; } = new();
+        private string DateTimeStr => string.Join(", ", _accessScheduleDto.ScheduleEntries.Select(x => $"{(new DateTime().Add(x.StartTime).ToString(_timeFormat))} -  {(x.EndTime != new TimeSpan(00, 00, 00) ? (new DateTime().Add(x.EndTime).ToString(_timeFormat)) : SwitchTimeFormat ? "12:00 Am" : "24:00")}"));
+        public AccessScheduleDto _accessScheduleDto { get; set; } 
         public string TextValue { get; set; } = "";
-
-
 
         private Dictionary<TimeSpan, bool> _selections = null!;
 
@@ -40,11 +85,11 @@ namespace AccessSchedule.Component
 
         protected override void OnInitialized()
         {
-            _date = accessScheduleDto.Date;
+            dates = AccessSchedules.Where(x => "Holiday".Equals(x.DayName) && x.Date != null).Select(x => x.Date);
+            _accessScheduleDto = AccessSchedules.FirstOrDefault(x => "Holiday".Equals(x.DayName));
             GetSelection();
             CheckSelection();
         }
-
         private void HandleMouseDown(TimeSpan idx)
         {
             if (IsAddOrRemove)
@@ -75,7 +120,6 @@ namespace AccessSchedule.Component
             CheckSelection();
 
         }
-
         private void HandleMouseUp()
         {
             _isBeingSelected = false;
@@ -85,12 +129,11 @@ namespace AccessSchedule.Component
             bool flag = true;
             TimeSpan tempFirst = new();
             TimeSpan tempSecond = new();
-            accessScheduleDto = new();
-            accessScheduleDto.Date = _date;
 
+            _accessScheduleDto.ScheduleEntries = [];
             if (_selections.All(x => x.Value == true))
             {
-                accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = _selections.First().Key, EndTime = _selections.Last().Key });
+                _accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = _selections.First().Key, EndTime = _selections.Last().Key });
 
                 return;
             }
@@ -107,72 +150,28 @@ namespace AccessSchedule.Component
                 }
                 if (i.Value is false && flag is false)
                 {
-                    accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
+                    _accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
                     flag = true;
                 }
             }
             if (_selections.Last().Value)
             {
                 tempSecond = new TimeSpan(00, 00, 00);
-                accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
+                _accessScheduleDto.ScheduleEntries.Add(new AccessScheduleEntryDto { StartTime = tempFirst, EndTime = tempSecond });
             }
 
-        }
-
-        private bool SheduleExist(TimeSpan start, TimeSpan end)
-        {
-            return accessScheduleDto.ScheduleEntries.Any(x => start == x.StartTime && end == x.EndTime);
         }
 
         private bool ScheduleExistInBetween(TimeSpan timeStr)
         {
             bool flag = false;
-            flag = accessScheduleDto.ScheduleEntries.Any(x => timeStr >= x.StartTime && timeStr <= x.EndTime);
+            flag = _accessScheduleDto.ScheduleEntries.Any(x => timeStr >= x.StartTime && timeStr <= x.EndTime);
             if (flag)
             {
                 _selections[timeStr] = true;
             }
             return flag;
         }
-
-
-        private TimeSpan? _startTime = new TimeSpan(00, 45, 00);
-        private TimeSpan? _endTime = new TimeSpan(00, 45, 00);
-        public bool _isOpen = false;
-
-        public void ToggleOpen()
-        {
-            if (_isOpen)
-            {
-                _isOpen = false;
-            }
-            else
-            {
-                _isOpen = true;
-            }
-        }
-
-        private void AddManually()
-        {
-            if (_startTime < _endTime)
-            {
-                bool check = SheduleExist((TimeSpan)_startTime, (TimeSpan)_endTime);
-
-                if (!check)
-                {
-                    accessScheduleDto.ScheduleEntries.Add(new() { StartTime = (TimeSpan)_startTime, EndTime = (TimeSpan)_endTime });
-                    ToggleOpen();
-                }
-                GetSelection();
-            }
-            else
-            {
-                Snackbar.Clear();
-                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
-                Snackbar.Add("Start Time must be less than end time", Severity.Error);
-            }
-        }
-
         private void GetSelection()
         {
             _selections = new Dictionary<TimeSpan, bool>();

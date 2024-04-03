@@ -1,4 +1,37 @@
-﻿<MudPaper Elevation="0" Class="pa-4 ma-4" Style="user-select: none; cursor:auto;">
+﻿
+        <MudPaper Elevation="0" Class="d-flex justify-center flex-grow-1 gap-4 ml-6 pl-16 mt-2 pt-2 mb-7 pb-7">
+            <MudPaper Elevation="0"  Style="margin-right:280px">
+                <MudGrid Class="align-center">
+                <MudItem  >
+                        <MudPaper Outlined="true" Elevation="0">
+                    <MudDatePicker PickerVariant="PickerVariant.Dialog" T="DateTime" Label="Date" @bind-date="dateValue" />
+                    </MudPaper>
+                </MudItem>
+                <MudItem >
+                    <MudPaper>
+                        <MudButton Variant="Variant.Filled" OnClick="@IncrementDate" Color="Color.Primary">+</MudButton>
+        </MudPaper>
+                </MudItem>
+                <MudItem >
+                    <MudPaper >
+                        <MudButton Variant="Variant.Filled" OnClick="@DecrementDate" Color="Color.Primary">-</MudButton>
+    </MudPaper>
+                </MudItem>
+                <MudItem >
+                    <MudItem xs="12">
+                            <MudPaper Elevation="0" Height="150px" Width="250px" Outlined="true">
+                        @foreach(var d in dates)
+                        {
+                            <DateComponent Date="@d.ToIsoDateString()" Selected="@selectedItem" SelectedChanged="RowClicked"></DateComponent>
+                        }
+                        </MudPaper>
+                    </MudItem>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        </MudPaper>
+
+<MudPaper Elevation="0" Class="pa-4 ma-4" Style="user-select: none;">
     
     <MudContainer>
         <MudGrid Spacing="0" >
@@ -39,3 +72,12 @@
         </MudGrid>
     </MudContainer>
 </MudPaper>
+
+
+                                @using System.Net.Http.Json
+@using MudBlazor.Extensions
+
+
+
+
+
